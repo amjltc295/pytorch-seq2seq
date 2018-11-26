@@ -164,9 +164,9 @@ def train_model(
     # Train
     trainer = SupervisedTrainer(
         loss=loss,
-        batch_size=512,
-        checkpoint_every=50,
-        print_every=10,
+        batch_size=32,
+        checkpoint_every=10000,
+        print_every=50,
         experiment_directory=experiment_directory,
     )
     start = time.clock()
@@ -174,10 +174,10 @@ def train_model(
         seq2seq = trainer.train(
             seq2seq,
             train,
-            n_epochs=2,
+            n_epochs=5,
             dev_data=dev,
             optimizer=optimizer,
-            teacher_forcing_ratio=0.5,
+            teacher_forcing_ratio=0.75,
             resume=resume,
         )
     # Capture ^C
@@ -193,7 +193,7 @@ def initialize_model(
         train,
         input_vocab,
         output_vocab,
-        max_len=50,
+        max_len=20,
         hidden_size=128,
         dropout_p=0,
         bidirectional=True,
