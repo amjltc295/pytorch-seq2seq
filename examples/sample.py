@@ -139,7 +139,7 @@ def train_model(
 ):
     # Prepare dataset
     train = Seq2SeqDataset.from_file(train_source, train_target)
-    train.build_vocab(50000, 50000)
+    train.build_vocab(100000, 100000)
     dev = Seq2SeqDataset.from_file(
         dev_source,
         dev_target,
@@ -164,8 +164,8 @@ def train_model(
     # Train
     trainer = SupervisedTrainer(
         loss=loss,
-        batch_size=32,
-        checkpoint_every=10000,
+        batch_size=16,
+        checkpoint_every=20000,
         print_every=50,
         experiment_directory=experiment_directory,
     )
@@ -177,7 +177,7 @@ def train_model(
             n_epochs=5,
             dev_data=dev,
             optimizer=optimizer,
-            teacher_forcing_ratio=0.75,
+            teacher_forcing_ratio=0.5,
             resume=resume,
         )
     # Capture ^C
@@ -193,7 +193,7 @@ def initialize_model(
         train,
         input_vocab,
         output_vocab,
-        max_len=20,
+        max_len=50,
         hidden_size=128,
         dropout_p=0,
         bidirectional=True,
