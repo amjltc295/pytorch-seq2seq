@@ -21,10 +21,7 @@ LOG_FORMAT = '%(asctime)s:%(name)s:%(levelname)s: %(message)s'
 
 
 @click.command()
-@click.argument('train-source')
-@click.argument('train-target')
-@click.argument('dev-source')
-@click.argument('dev-target')
+@click.argument('data_dir')
 @click.option(
     '-expt',
     '--experiment-directory',
@@ -49,10 +46,7 @@ LOG_FORMAT = '%(asctime)s:%(name)s:%(levelname)s: %(message)s'
     help='logging level',
 )
 def sample(
-        train_source,
-        train_target,
-        dev_source,
-        dev_target,
+        data_dir,
         experiment_directory,
         checkpoint,
         resume,
@@ -82,6 +76,10 @@ def sample(
     $EXPT_PATH -c $CHECKPOINT_DIR
     ```
     """
+    train_source = os.path.join(data_dir, 'train_source.txt')
+    train_target = os.path.join(data_dir, 'train_target.txt')
+    dev_source = os.path.join(data_dir, 'test_source.txt')
+    dev_target = os.path.join(data_dir, 'test_target.txt')
     logging.basicConfig(
         format=LOG_FORMAT,
         level=getattr(logging, log_level.upper()),
@@ -139,7 +137,7 @@ def train_model(
 ):
     # Prepare dataset
     train = Seq2SeqDataset.from_file(train_source, train_target)
-    train.build_vocab(100000, 100000)
+    train.build_vocab(95000, 95000)
     dev = Seq2SeqDataset.from_file(
         dev_source,
         dev_target,
@@ -193,7 +191,7 @@ def initialize_model(
         train,
         input_vocab,
         output_vocab,
-        max_len=50,
+        max_len=100,
         hidden_size=128,
         dropout_p=0,
         bidirectional=True,
