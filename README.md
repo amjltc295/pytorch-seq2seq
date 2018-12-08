@@ -1,3 +1,9 @@
+# How to train
+1. Prepare train_source.txt, train_target.txt, test_source.txt, test_target.txt in a folder
+2. Run
+```
+CUDA_VISIBLE_DEVICES=1 python examples/sample.py <data folder in 1>  -expt <output model name folder>
+```
 # pytorch-seq2seq
 
 [![Build Status](https://travis-ci.org/IBM/pytorch-seq2seq.svg?branch=master)](https://travis-ci.org/IBM/pytorch-seq2seq)
