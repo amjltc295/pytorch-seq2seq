@@ -78,8 +78,8 @@ def sample(
     """
     train_source = os.path.join(data_dir, 'train_source.txt')
     train_target = os.path.join(data_dir, 'train_target.txt')
-    dev_source = os.path.join(data_dir, 'test_source.txt')
-    dev_target = os.path.join(data_dir, 'test_target.txt')
+    dev_source = os.path.join(data_dir, 'valid_source.txt')
+    dev_target = os.path.join(data_dir, 'valid_target.txt')
     logging.basicConfig(
         format=LOG_FORMAT,
         level=getattr(logging, log_level.upper()),
@@ -162,7 +162,7 @@ def train_model(
     # Train
     trainer = SupervisedTrainer(
         loss=loss,
-        batch_size=16,
+        batch_size=10,
         checkpoint_every=20000,
         print_every=50,
         experiment_directory=experiment_directory,
@@ -209,7 +209,7 @@ def initialize_model(
         max_len,
         hidden_size * 2 if bidirectional else 1,
         dropout_p=dropout_p,
-        use_attention=True,
+        use_attention=False,
         bidirectional=bidirectional,
         eos_id=train.tgt_field.eos_id,
         sos_id=train.tgt_field.sos_id,

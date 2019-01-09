@@ -86,6 +86,8 @@ class DecoderRNN(BaseRNN):
         output, hidden = self.rnn(embedded, hidden)
 
         attn = None
+        import pdb
+        pdb.set_trace()
         if self.use_attention:
             output, attn = self.attention(output, encoder_outputs)
         else:

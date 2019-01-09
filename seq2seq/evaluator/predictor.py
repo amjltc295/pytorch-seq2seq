@@ -1,3 +1,5 @@
+import json
+
 import torch
 from torch.autograd import Variable
 import torchtext
@@ -34,20 +36,38 @@ class Predictor(object):
             by the pre-trained model
         """
         with torch.no_grad():
-            src_id_seq = Variable(torch.LongTensor([self.src_vocab.stoi[tok] 
+            src_id_seq = Variable(torch.LongTensor([self.src_vocab.stoi[tok]
                                     for tok in src_seq])).view(1, -1)
             if torch.cuda.is_available():
                 src_id_seq = src_id_seq.cuda()
 
             dataset = Seq2SeqDataset.from_list(' '.join(src_seq))
             dataset.vocab = self.src_vocab
-            batch = torchtext.data.Batch.fromvars(dataset, 1, 
+            batch = torchtext.data.Batch.fromvars(dataset, 1,
                         src=(src_id_seq, [len(src_seq)]), tgt=None)
 
-            _, _, other = self.model(batch)
-            
+            a, b, other = self.model(batch)
+
         length = other['length'][0]
 
         tgt_id_seq = [other['sequence'][di][0].data[0] for di in range(length)]
         tgt_seq = [self.tgt_vocab.itos[tok] for tok in tgt_id_seq]
+
+        '''
+        import pdb
+        pdb.set_trace()
+        attention_score = torch.stack(other['attention_score']).cpu().squeeze(1).squeeze(1).numpy()[:length, :].tolist()
+        attentions = {}
+        attentions['type'] = 'simple'
+        attentions['name'] = 'decoder_attention'
+        attentions['value'] = attention_score
+        data = {}
+        data['source'] = src_seq
+        data['translation'] = tgt_seq
+        data['attentions'] = [attentions]
+        with open(f"per_len_vis/{''.join(src_seq)}.txt", 'w') as fout:
+            json.dump({"0": data}, fout)
+
+        '''
+
         return tgt_seq
