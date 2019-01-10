@@ -53,7 +53,6 @@ class Predictor(object):
         tgt_id_seq = [other['sequence'][di][0].data[0] for di in range(length)]
         tgt_seq = [self.tgt_vocab.itos[tok] for tok in tgt_id_seq]
 
-        '''
         import pdb
         pdb.set_trace()
         attention_score = torch.stack(other['attention_score']).cpu().squeeze(1).squeeze(1).numpy()[:length, :].tolist()
@@ -67,7 +66,5 @@ class Predictor(object):
         data['attentions'] = [attentions]
         with open(f"per_len_vis/{''.join(src_seq)}.txt", 'w') as fout:
             json.dump({"0": data}, fout)
-
-        '''
 
         return tgt_seq
